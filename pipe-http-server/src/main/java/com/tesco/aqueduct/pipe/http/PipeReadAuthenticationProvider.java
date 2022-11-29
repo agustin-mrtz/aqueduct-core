@@ -12,6 +12,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Singleton
@@ -42,5 +44,13 @@ public class PipeReadAuthenticationProvider implements AuthenticationProvider {
         return Flowable.just(
             authenticate(identity, secret)
         );
+    }
+
+    public Object cipherSecret(AuthenticationRequest<?,?> authenticationRequest) throws NoSuchAlgorithmException {
+        MessageDigest sha1 = MessageDigest.getInstance("SHA1");
+        sha1.update((byte[]) authenticationRequest.getSecret());
+        byte[] digest = sha1.digest();
+        Object result = (digest.length == 0) ?  null : digest;
+        return result;
     }
 }
