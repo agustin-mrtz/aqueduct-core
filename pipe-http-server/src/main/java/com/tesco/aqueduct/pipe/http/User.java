@@ -28,7 +28,7 @@ class User {
     }
 
     boolean isAuthenticated(final Object identity, final Object secret) {
-        return username.equals(identity) && password.equals(secret);
+        return username==identity && password == secret;
     }
 
     AuthenticationResponse toAuthenticationResponse() {
