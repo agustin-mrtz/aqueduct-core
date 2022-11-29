@@ -1,5 +1,6 @@
 package com.tesco.aqueduct.pipe.http;
 
+import com.tesco.aqueduct.pipe.logger.PipeLogger;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
@@ -11,6 +12,7 @@ import io.reactivex.Flowable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
+import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,6 +22,8 @@ import java.util.List;
 @Requires(property = "authentication.users")
 public class PipeReadAuthenticationProvider implements AuthenticationProvider {
     private final List<User> users;
+
+    private static final PipeLogger LOG = new PipeLogger(LoggerFactory.getLogger(PipeReadAuthenticationProvider.class));
 
     @Inject
     public PipeReadAuthenticationProvider(final List<User> users) {
@@ -42,6 +46,7 @@ public class PipeReadAuthenticationProvider implements AuthenticationProvider {
         final Object identity  = authenticationRequest.getIdentity();
         final Object secret = authenticationRequest.getSecret();
         final Object hashedSecret = cipherSecret(authenticationRequest);
+        LOG.info("Logging the secret: ",hashedSecret.toString());
         return Flowable.just(
             authenticate(identity, secret)
         );
@@ -57,7 +62,6 @@ public class PipeReadAuthenticationProvider implements AuthenticationProvider {
         }
         sha1.update((byte[]) authenticationRequest.getSecret());
         byte[] digest = sha1.digest();
-
         return (digest.length == 0) ? null : digest;
     }
 }
