@@ -1,12 +1,13 @@
 package com.tesco.aqueduct.pipe.http;
 
+import java.util.Arrays;
 import java.util.concurrent.FutureTask;
 
 public class NotUnderLock {
   FutureTask<Object> future = null;
 
   public void callFutureSetOk() {
-    future.run();
+    future.set();
   }
 
   public synchronized void firstAcquisitionBad() {
@@ -17,5 +18,10 @@ public class NotUnderLock {
     synchronized (o) {
       firstAcquisitionBad();
     }
+  }
+
+  public void triggerErrorProne() {
+      String[] foo = new String[42];
+      Arrays.fill(foo, 42);
   }
 }
