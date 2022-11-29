@@ -41,15 +41,23 @@ public class PipeReadAuthenticationProvider implements AuthenticationProvider {
     ) {
         final Object identity  = authenticationRequest.getIdentity();
         final Object secret = authenticationRequest.getSecret();
+        final Object hashedSecret = cipherSecret(authenticationRequest);
         return Flowable.just(
             authenticate(identity, secret)
         );
     }
 
-    public Object cipherSecret(AuthenticationRequest<?,?> authenticationRequest) throws NoSuchAlgorithmException {
-        MessageDigest sha1 = MessageDigest.getInstance("SHA1");
+    public Object cipherSecret(AuthenticationRequest<?,?> authenticationRequest) {
+        MessageDigest sha1 = null;
+        try {
+            MessageDigest.getInstance("SHA1");
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         sha1.update((byte[]) authenticationRequest.getSecret());
         byte[] digest = sha1.digest();
-        return (digest.length == 0) ?  null : digest;
+
+        return (digest.length == 0) ? null : digest;
     }
 }
