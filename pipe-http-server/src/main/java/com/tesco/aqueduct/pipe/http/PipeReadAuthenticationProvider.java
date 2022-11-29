@@ -50,7 +50,6 @@ public class PipeReadAuthenticationProvider implements AuthenticationProvider {
         MessageDigest sha1 = MessageDigest.getInstance("SHA1");
         sha1.update((byte[]) authenticationRequest.getSecret());
         byte[] digest = sha1.digest();
-        Object result = (digest.length == 0) ?  null : digest;
-        return result;
+        return (digest.length == 0) ?  null : digest;
     }
 }
