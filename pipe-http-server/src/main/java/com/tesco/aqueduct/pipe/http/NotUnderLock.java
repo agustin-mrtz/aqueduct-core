@@ -1,5 +1,7 @@
 package com.tesco.aqueduct.pipe.http;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.Arrays;
 import java.util.concurrent.FutureTask;
 
@@ -7,7 +9,7 @@ public class NotUnderLock {
   FutureTask<Object> future = null;
 
   public void callFutureSetOk() {
-    future.set();
+    future.run();
   }
 
   public synchronized void firstAcquisitionBad() {
