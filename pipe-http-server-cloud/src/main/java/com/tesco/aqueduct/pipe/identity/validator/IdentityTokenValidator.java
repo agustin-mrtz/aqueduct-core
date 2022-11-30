@@ -24,6 +24,7 @@ import org.slf4j.MDC;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Singleton
@@ -86,7 +87,7 @@ public class IdentityTokenValidator implements TokenValidator {
 
     private Authentication toUserAuthentication(String clientId) {
         List<String> roles = users.stream()
-            .filter(u -> u.clientId.equals(clientId))
+            .filter(u -> Objects.equals(u.clientId, clientId))
             .filter(u -> u.roles != null)
             .map(u -> u.roles)
             .findFirst()
